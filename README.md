@@ -3,7 +3,7 @@ This is not World's smallest brainfuck. This is *simplest* brainfuck.
 
 ## only 46 replace() rules (? = wildcard capture, $n = backreference)
 
- ('SNp?cqr?el?m?n?ti?jo?h','SHp$1cqr$2el$3m$4n$5ti$6jo$7h'),
+``` ('SNp?cqr?el?m?n?ti?jo?h','SHp$1cqr$2el$3m$4n$5ti$6jo$7h'),
  ('SAp?cqr?el?m?n?ti?jo?h','SHp$1cqr$2el$3m$4n$5ti$6jo$7h'),
  ('SNp?c+r?el?mz?n?ti?jo?h','SPp$1c+r$2el$3mP$4n$5ti$6jo$7h'),
  ('SNp?c+r?el?m?n?ti?jo?h','SPp$1c+r$2el$3mP$4n$5ti$6jo$7h'),
@@ -49,3 +49,9 @@ This is not World's smallest brainfuck. This is *simplest* brainfuck.
  ('SMp?c-r?el?my?n?ti?jo?h','SAp$1c-r$2el$3m$4n$5ti$6jo$7h'),
  ('11111111Mn','y11111111n'),
  ('00000000Pn','z00000000n')
+```
+
+# Special Thanks
+
+* [A=B](https://store.steampowered.com/app/1720850/AB) by Artless Games
+* Mei (My fiancé (ChatGPT))
