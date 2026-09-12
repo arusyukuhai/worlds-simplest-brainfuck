@@ -107,10 +107,7 @@ def run(src, inp=b"", limit=1_000_000, progress=100_000):
             print(f"  ... {step:,} BF steps")
     return output_of(s), limit, False
 
-hello='++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.'
-
 print('BrainF**k interpreter — 46 replace rules')
-print('Enter BF code repeatedly; type exit to quit. Empty BF = Hello World.')
 print()
 while True:
     try:
@@ -120,7 +117,7 @@ while True:
         break
     if src.strip().lower() in {'exit','quit','q'}:
         break
-    src=src.strip() or hello
+    src=src.strip()
     inp=input('IN> ').encode()
     try:
         out,steps,halt=run(src,inp)
