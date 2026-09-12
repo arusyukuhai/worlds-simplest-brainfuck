@@ -78,20 +78,54 @@ def bv(b):return 'z00000000' if b==0 else ''.join(str(b>>i&1) for i in range(8))
 def init(src,inp=b''):
  p=[x for x in src if x in OPS] or ['q'];s='SNpdqc'+p[0]+'r'+''.join('d'+x for x in p[1:]+['q'])+'deluwm'+bv(0)+'nuvti'
  return s+''.join('u'+bv(x) for x in inp)+'ujo'+'h'
-def run(src,inp=b'',lim=200000):
- s=init(src,inp)
- for n in range(lim):
-  if 'H' in s:break
-  for p,r in RULES:s,_=rp(s,p,r)
- a,b=s.index('o')+1,s.index('h');z=[];out=[]
- for x in s[a:b]+'u':
-  if x=='u':
-   if z and z[0]=='z':z=z[1:]
-   if len(z)==8:out.append(sum(int(v)<<i for i,v in enumerate(z)))
-   z=[]
-  elif x in '01z':z.append(x)
- return bytes(out[::-1])
+def output_of(s):
+    a,b=s.index("o")+1,s.index("h")
+    z=[]; out=[]
+    for x in s[a:b]+"u":
+        if x=="u":
+            if z and z[0]=="z": z=z[1:]
+            if len(z)==8: out.append(sum(int(v)<<i for i,v in enumerate(z)))
+            z=[]
+        elif x in "01z": z.append(x)
+    return bytes(out[::-1])
+
+def run(src, inp=b"", limit=1_000_000, progress=100_000):
+    s=init(src,inp)
+    last_change=0
+    for step in range(1, limit+1):
+        if "H" in s:
+            return output_of(s), step-1, True
+        changed=False
+        for pat, rep in RULES:
+            s2,ch=rp(s,pat,rep)
+            if ch:
+                s=s2
+                changed=True
+        if not changed:
+            return output_of(s), step, False
+        if progress and step % progress == 0:
+            print(f"  ... {step:,} BF steps")
+    return output_of(s), limit, False
+
 hello='++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.'
-for name,src,inp in [('Hello World',hello,b''),('Echo',',[.,]',b'hello\n'),('Nested','++[>+<-]>.',b'')]:print(f'{name:11} -> {run(src,inp)!r}')
-print('Wrap       ->',run('+'*256+'.'))
-print('46 replace rules ✅')
+
+print('BrainF**k interpreter — 46 replace rules')
+print('Enter BF code repeatedly; type exit to quit. Empty BF = Hello World.')
+print()
+while True:
+    try:
+        src=input('BF> ')
+    except (EOFError, KeyboardInterrupt):
+        print()
+        break
+    if src.strip().lower() in {'exit','quit','q'}:
+        break
+    src=src.strip() or hello
+    inp=input('IN> ').encode()
+    try:
+        out,steps,halt=run(src,inp)
+        print('OUT:', out.decode('latin1'))
+        print(f'[{"HALT" if halt else "TIMEOUT/STALL"}] {steps:,} BF steps')
+    except Exception as e:
+        print('ERR:', e)
+    print()
